@@ -1,0 +1,15 @@
+sort1 uses: Bubble Sort
+
+How do you know?: Bubble sort is the fastest in sorting the already sorted text. And is also the slowest in the reversed text.
+It matches with the data that I have written that's why I assume that sort1 uses Bubble sort.
+
+sort2 uses: Merge Sort
+
+How do you know?: Even though Merge sort is not the fastest in sorting the already sorted text, it is still better than bubble sort.
+It is because Merge sort is very fast in sorting no matter if it is sorted,random, or reversed. By observing the data that I have collected,
+I can see that sort2 is consistently fast in sorting sorted,random, and reversed text. That is why I assume that sor2 uses Merge sort.
+
+sort3 uses: Selection Sort
+
+How do you know?: Selection sort is an algorithm that gets slower the bigger the number it sorts. It matches with the data
+that I have collected, that's why I assume that sort3 uses Selection sort.
