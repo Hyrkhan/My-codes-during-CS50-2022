@@ -1,0 +1,23 @@
+SELECT name FROM songs;
+//selects all the name of songs inside the "songs" table
+
+SELECT name FROM songs ORDER BY tempo ASC;
+//selects all the name of songs inside the "songs" table and order it in "asc"ending order by tempo(a column inside the table)
+
+SELECT name FROM songs ORDER BY duration_ms DESC LIMIT 5;
+//selects all the name of songs inside the "songs" table and order it in "desc"ending order by duration_ms(a column inside the table) and only display the top "5" by LIMIT
+
+SELECT name FROM songs WHERE danceability > 0.75 AND energy > 0.75 AND valence > 0.75;
+//selects all the name of songs inside the "songs" table and only display the name of songs that mets all the conditions above
+
+SELECT AVG(energy) FROM songs;
+//averages all the energy(a column inside the table)(must be integer) from the "songs" table and display it
+
+SELECT name FROM songs WHERE artist_id = (SELECT id FROM artists WHERE name = 'Post Malone');
+//Select all the name of songs where the artist_id matches the id of the artist.id on the "artists" table with the artists.name of = 'Post Malone'
+
+SELECT AVG(energy) FROM songs WHERE artist_id = (SELECT id FROM artists WHERE name = 'Drake');
+//averages all energy from songs that Drake made
+
+SELECT name FROM songs WHERE name LIKE '%feat.%';
+//Selects all names of songs where the word/phrase "feat." can be found
