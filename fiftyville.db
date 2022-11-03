@@ -1,0 +1,87 @@
+--This are the logs and the answer txt that I did while solving the mystery case of the stolen CS50 duck
+
+-- Keep a log of any SQL queries you execute as you solve the mystery.
+--Given information are: theft took place on July 28, 2021 and that it took place on Humphrey Street--
+.tables --I want to see what tables I have to work with--
+SELECT * FROM crime_scene_reports; --I want to see the contents inside the crimescenereports table--
+SELECT * FROM crime_scene_reports WHERE month = 7 AND day = 28 AND street = "Humphrey Street"; --I want to know if there is a record in the crimescenereports table of the theft that I will be looking on==
+--There are two crimes that day, the CS50 DUCK theft and Littering that took place at 16:36. No known witnesses--
+--The cs50 duck theft took place at 10:15am at the H-Street bakery. There are three witnesses and interviews and each transcripts mentions the bakery--
+.tables --I want to look for the next table I want to look into--
+.schema interviews --I want to look into the interviews table next to find some clues--
+SELECT * FROM interviews WHERE month = 7 AND day = 28 AND year = 2021; --I want to see the records of interviews that is conducted on the exact day,month, and year that coincides with the theft case--
+--there are 7 entries on that day and 3 of them proved very useful--
+-- id = 161 name = Ruth said sometime within 10 mins of the theft, the theif get into a car in the bakery parking lot and drove away. I might want to look into the bakery parking lot logs to see the license plates.
+--id = 162 name = Eugene said he recognized the theif and before he arived at Emma's bakery, he saw the theif withdraw money from ATM on Leggett Street. I might want to look into the atm logs on that day early in the morning
+--id = 163 name = Raymond said he saw the theif calling someone for less than a minute. The thief wants his accomplice to buy him the earliest flight out of Fiftyville tommorrow and purchase it.--
+--This transcripts means I need to investigate the "bakery parking lot logs", the "atm transaction logs", the "calls logs" and the "flight logs"--
+.tables --I want to look at what table I want to look into next--
+.schema bakery_security_logs --I want to look into the bakery security logs next to look for the license plate of the thief--
+SELECT * FROM bakery_security_logs WHERE month = 7 AND day = 28 AND year = 2021; --I want to see the logs on the day of the crime
+--since the theft took place in 10:15 am,and the thief exited the bakery within 10mins of this timeframe, I want to narrow the search down--
+SELECT * FROM bakery_security_logs WHERE month = 7 AND day = 28 AND year = 2021 AND hour = 10 AND minute >= 15 AND minute <= 25; --I narrowed down the suspects and listed them down
+--5P2BI95
+--94KL13X
+--6P58WS2
+--4328GD8
+--G412CB7
+--L93JTIZ
+--322W7JE
+--0NTHK55
+.tables --I want to look at what table I want to look into next--
+.schema atm_transactions --I want to look into the atm transacion records next
+SELECT * FROM atm_transactions WHERE month = 7 AND day = 28 AND year = 2021 AND atm_location = "Leggett Street"; --I want to narrow down the logs based on the clues I found from the interview
+--there are 8 logs that fits the descrition, I will list down the account numbers and amount withdrawn from the atm for future reference
+--28500762 = 48
+--28296815 = 20
+--76054385 = 60
+--49610011 = 50
+--16153065 = 80
+
+--25506511 = 20
+--81061156 = 30
+--26013199 = 35
+.tables --I want to look at what table I want to look into next--
+.schema phone_calls --I want to look into the phone calls records next. The call seems to be less than a minute based on the interview. I will narrow it down with that
+SELECT * FROM phone_calls WHERE month = 7 AND day = 28 AND year = 2021 AND duration < 60; --there are 9 logs that fit the description. I will list down the caller and reciever numbers and call duration of each one--
+--(130) 555-0289 / (996) 555-8899 = 51
+--(499) 555-9472 / (892) 555-8872 = 36
+--(367) 555-5533 / (375) 555-8161 = 45
+--(499) 555-9472 / (717) 555-1342 = 50
+--(286) 555-6063 / (676) 555-6554 = 43
+--(770) 555-1861 / (725) 555-3243 = 49
+--(031) 555-6622 / (910) 555-3251 = 38
+--(826) 555-1652 / (066) 555-9701 = 55
+--(338) 555-6650 / (704) 555-2131 = 54
+--I need to find out the earliest flight out of Fiftyville that will happen the next day of the crime (28) which is (29)
+SELECT * FROM flights WHERE month = 7 AND day = 29 AND year = 2021 ORDER BY hour ASC; --I want to know the earliest flight available at 29th of july
+--ill list down the 2 earliest flights on the log with the origin airport id - destination id- and the hour-minute
+--id = 36 === 8 / 4 = 8:20
+--id = 43 === 8 / 1 = 9:30
+--next I want to know what airports do there two corresponds to.
+SELECT * FROM airports WHERE id IN (8,4,1);
+--so 8 is the Fiftyville airport, therefore the earliest flight will be from fiftyville (CSF) to LaGuardia Airport New York City (LGA) at 8:20 on July 29 2021
+--next I want to find out the people who boarded the flight 36 and get their passport_numbers
+SELECT * FROM passengers WHERE flight_id = 36; -- there are quite a number of passengers, next I want to find the information of passengers using the passport number recorded
+SELECT * FROM passengers JOIN people ON passengers.passport_number = people.passport_number WHERE flight_id = 36; --next I will compare their license plates to the recorded suspects license plate
+--there are some matching suspects, i will list them down
+--id = 686048 Bruce (367) 555-5533 5773159633 94KL13X
+--id = 467400 Luca  (389) 555-5198 8496433585 4328GD8
+--id = 398010 Sofia (130) 555-0289 1695452385 G412CB7
+--id = 560886 Kelsey(499) 555-9472 8294398571 0NTHK55
+--next is to find any matching phone numbers from previous clues
+--the remaining suspects are Bruce, Sofia, and Kelsey
+--next I will find any matching account number from the suspects that matches the previous clues
+SELECT * FROM bank_accounts JOIN people ON bank_accounts.person_id = people.id WHERE people.id IN (686048, 398010, 560886);
+--only Bruce has an account_number
+SELECT * FROM people WHERE phone_number = "(375) 555-8161";
+--the number that Bruce called belongs to Robin, he does not have a passport number
+
+--THEREFORE, I CONCLUDE THAT BRUCE IS THE THIEF, HE WENT TO NEW YORK CITY, AND HIS ACCOMPLICE IS ROBIN
+
+
+
+
+The THIEF is: Bruce
+The city the thief ESCAPED TO: New York City
+The ACCOMPLICE is: Robin
