@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            // TODO: Add code to check answers to questions
+            document.addEventListener('DOMContentLoaded', function() { //wait till page has loaded, then do this function
+
+                let correct = document.querySelector('.correct'); //name a variable to be used, store the element with the class correct('.correct') to the variable
+                correct.addEventListener('click', function() {  //add a click event to the variable, then execute this function when clicked
+                    correct.style.backgroundColor = 'green';    //change the bg color of the element inside the variable to green
+                    document.querySelector('#feedback1').innerHTML = 'Correct!'; //optional, find the element with the id of feedback1 and edit its innerHTML to display it to the page
+                }); //end of the function that will be executed when clicked
+
+                //since there are many elements with incorrect class, we can use 'document.querySelectorAll' instead
+                let incorrects = document.querySelectorAll('.incorrect'); //declare a variable that represents all incorrects, give all the elements with the class incorrect
+                for (let i = 0; i < incorrects.length; i++)     //use for loop to loop through all elements that have the class incorrect, base on the length of the array "incorrects"
+                {
+                    incorrects[i].addEventListener('click', function() {    //add a click event to every element of the array, then execute the function
+                        incorrects[i].style.backgroundColor = 'red';        //when clicked, that element will change its bg color to red
+                        document.querySelector('#feedback1').innerHTML = 'Incorrect';   //optional, find the element with the id of feedback1 and edit its innerHTML to display it to the page
+                    }); //end of the function that will be executed when clicked
+                } //end of for loop
+
+                document.querySelector('#check').addEventListener('click', function() { //select the button with class = check, add a click event that executes the function
+                    let input = document.querySelector('input');    //declare a variable and give it the value of the input button
+                    if (input.value == "Apple") //check the value inside the input button and compare it to the correct answer
+                    {
+                        input.style.backgroundColor = 'green';      //if correct, change the input field's backgroundColor to green
+                        document.querySelector('#feedback2').innerHTML = 'Correct'; //optional, find the element with the id of feedback2 and edit its innerHTML to display it to the page
+                    }
+                    else
+                    {
+                        input.style.backgroundColor = 'red';    //if incorrect, change the input field's backgroundColor to red
+                        document.querySelector('#feedback2').innerHTML = 'Incorrect';   //optional, find the element with the id of feedback2 and edit its innerHTML to display it to the page
+                    } //end of if else
+                }) //end of the function that will be executed when clicked
+
+            }); //end of the DOMContentLoaded function
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                                <!-- TODO: Add multiple choice question here -->
+
+                <h3>What is the name of the capital city of the Philippines?</h3>
+                <button class="incorrect">Quezon City</button>
+                <button class="correct">Manila City</button>
+                <button class="incorrect">Batangas City</button>
+                <button class="incorrect">Baguio City</button>
+                <button class="incorrect">Tagaytay City</button>
+                <p id="feedback1" ></p>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                                <!-- TODO: Add free response question here -->
+
+                <h3>What is the name of the fruit that doctors hate?</h3>
+                <input type="text"></input>
+                <button id="check">Check Answer</button>
+                <p id="feedback2" ></p>
+
+            </div>
+        </div>
+    </body>
+</html>
